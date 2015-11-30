@@ -64,6 +64,7 @@ option (BUILD_gflags_nothreads_LIB "Request build of the single-threaded gflags 
 option (BUILD_PACKAGING            "Enable build of distribution packages using CPack."                       OFF)
 option (BUILD_TESTING              "Enable build of the unit tests and their execution using CTest."          OFF)
 option (INSTALL_HEADERS            "Request packaging of headers and other development files."                ON)
+option (BUILD_WITH_STATIC_CRT      "Use CRT Static Runtime Library on Visual Studio"                          OFF)
 
 mark_as_advanced (CLEAR CMAKE_INSTALL_PREFIX)
 mark_as_advanced (CMAKE_CONFIGURATION_TYPES
