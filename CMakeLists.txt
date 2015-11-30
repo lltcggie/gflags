@@ -344,6 +344,21 @@ foreach (TYPE IN ITEMS STATIC SHARED)
   endif ()
 endforeach ()
 
+if(MSVC AND BUILD_WITH_STATIC_CRT)
+  foreach(flag_var
+      CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+      CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+      CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+    if(${flag_var} MATCHES "/MD")
+      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+    endif(${flag_var} MATCHES "/MD")
+    if(${flag_var} MATCHES "/MDd")
+      string(REGEX REPLACE "/MDd" "/MTd" ${flag_var} "${${flag_var}}")
+    endif(${flag_var} MATCHES "/MDd")
+  endforeach(flag_var)
+endif()
+
 # ----------------------------------------------------------------------------
 # installation rules
 file (RELATIVE_PATH INSTALL_PREFIX_REL2CONFIG_DIR "${CMAKE_INSTALL_PREFIX}/${CONFIG_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}")
@@ -469,11 +484,11 @@ if (BUILD_PACKAGING)
         OUTPUT_VARIABLE CPACK_PACKAGE_ARCHITECTURE
       )
       if (RV EQUAL 0)
-	      string (STRIP "${CPACK_PACKAGE_ARCHITECTURE}" CPACK_PACKAGE_ARCHITECTURE)
+        string (STRIP "${CPACK_PACKAGE_ARCHITECTURE}" CPACK_PACKAGE_ARCHITECTURE)
       else ()
         execute_process (COMMAND uname -m OUTPUT_VARIABLE CPACK_PACKAGE_ARCHITECTURE)
         if (CPACK_PACKAGE_ARCHITECTURE MATCHES "x86_64")
-	        set (CPACK_PACKAGE_ARCHITECTURE amd64)
+          set (CPACK_PACKAGE_ARCHITECTURE amd64)
         else ()
           set (CPACK_PACKAGE_ARCHITECTURE i386)
         endif ()
